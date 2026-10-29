@@ -1,0 +1,68 @@
+---
+import { cv } from '../data/cv';
+
+const year = new Date().getFullYear();
+---
+
+<footer id="contacto" class="mx-auto max-w-5xl px-6 pb-16">
+  <div class="relative overflow-hidden rounded-3xl bg-ink px-8 py-12 text-surface sm:px-12 sm:py-16">
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-accent opacity-20 blur-3xl"
+    >
+    </div>
+
+    <div class="relative max-w-2xl">
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+        Contacto
+      </p>
+      <h2 class="mt-4 font-display text-3xl tracking-tight sm:text-4xl">
+        Hablemos de la próxima oportunidad.
+      </h2>
+      <p class="mt-4 leading-relaxed text-surface/70">
+        Respondo en menos de 24 horas. También puedes descargar el CV en PDF,
+        optimizado para sistemas de selección (ATS).
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a
+          href={`mailto:${cv.email}`}
+          class="rounded-full bg-accent px-6 py-3 text-sm font-medium text-accent-ink transition-opacity hover:opacity-90"
+        >
+          {cv.email}
+        </a>
+        <a
+          href="/cv"
+          class="rounded-full border border-surface/25 px-6 py-3 text-sm font-medium text-surface transition-colors hover:border-accent hover:text-accent"
+        >
+          Descargar CV
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-8 flex flex-col gap-3 text-sm text-ink-soft sm:flex-row sm:items-center sm:justify-between">
+    <p>© {year} {cv.name}. Todos los derechos reservados.</p>
+    <ul class="flex flex-wrap gap-5">
+      <li>
+        <a href="/ats" class="transition-colors hover:text-accent">
+          Analizador ATS
+        </a>
+      </li>
+      {
+        cv.links.map((link) => (
+          <li>
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noreferrer noopener"
+              class="transition-colors hover:text-accent"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</footer>

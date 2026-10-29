@@ -1,0 +1,137 @@
+---
+import { cv } from '../data/cv';
+---
+
+<section id="top" class="relative overflow-hidden">
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute -top-40 right-[-6rem] h-[28rem] w-[28rem] rounded-full bg-accent-soft blur-3xl opacity-80"
+  >
+  </div>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute bottom-[-10rem] left-[-8rem] h-80 w-80 rounded-full bg-surface-muted blur-3xl"
+  >
+  </div>
+
+  <div
+    class="relative mx-auto grid max-w-5xl gap-12 px-6 py-20 md:grid-cols-[1.35fr_1fr] md:items-center md:py-28"
+  >
+    <div>
+      <p
+        class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-muted px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-ink-soft"
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
+        {cv.available}
+      </p>
+
+      <h1
+        class="mt-6 font-display text-5xl leading-[1.02] tracking-tight sm:text-6xl"
+      >
+        {cv.name}
+      </h1>
+
+      <p class="mt-4 text-xl font-medium text-accent">{cv.headline}</p>
+
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
+        {cv.summary}
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-3">
+        <a
+          href="/cv"
+          class="rounded-full bg-ink px-6 py-3 text-sm font-medium text-surface transition-colors hover:bg-accent hover:text-accent-ink"
+        >
+          Ver CV en PDF
+        </a>
+        <a
+          href={`mailto:${cv.email}`}
+          class="rounded-full border border-line px-6 py-3 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
+        >
+          Contactar
+        </a>
+      </div>
+
+      <ul class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+        {
+          cv.links.map((link) => (
+            <li>
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noreferrer noopener"
+                class="group inline-flex items-center gap-1 text-ink-soft transition-colors hover:text-accent"
+              >
+                {link.label}
+                <span
+                  aria-hidden="true"
+                  class="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                >
+                  ↗
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <aside
+      class="rounded-3xl border border-line bg-surface-muted/70 p-7 shadow-sm backdrop-blur"
+    >
+      <p class="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-ink-soft">
+        Datos rápidos
+      </p>
+      <dl class="mt-5 space-y-4 text-sm">
+        <div>
+          <dt class="text-ink-soft">Ubicación</dt>
+          <dd class="mt-0.5 font-medium">{cv.location}</dd>
+        </div>
+        <div>
+          <dt class="text-ink-soft">Email</dt>
+          <dd class="mt-0.5 font-medium">
+            <a class="hover:text-accent" href={`mailto:${cv.email}`}>{cv.email}</a>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-ink-soft">Teléfono</dt>
+          <dd class="mt-0.5 font-medium">
+            <a class="hover:text-accent" href={`tel:${cv.phone.replace(/\s/g, '')}`}>
+              {cv.phone}
+            </a>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-ink-soft">Idiomas</dt>
+          <dd class="mt-0.5 font-medium">
+            {cv.languages.map((language) => language.name).join(' · ')}
+          </dd>
+        </div>
+      </dl>
+      <div class="mt-7 border-t border-line pt-5">
+        <p class="font-display text-2xl leading-tight">
+          “La venta empieza por escuchar.”
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <div class="relative border-y border-line bg-surface-muted/40">
+    <dl
+      class="mx-auto grid max-w-5xl grid-cols-3 divide-x divide-line px-6"
+    >
+      {
+        cv.stats.map((stat) => (
+          <div class="px-4 py-7 text-center first:pl-0 last:pr-0 sm:px-8">
+            <dd class="font-display text-3xl tracking-tight text-ink sm:text-4xl">
+              {stat.value}
+            </dd>
+            <dt class="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-ink-soft sm:text-xs">
+              {stat.label}
+            </dt>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>

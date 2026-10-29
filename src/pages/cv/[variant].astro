@@ -1,0 +1,22 @@
+---
+import ATSDocument from '../../components/ATSDocument.astro';
+import { cv } from '../../data/cv';
+import { variants } from '../../data/variants';
+import { buildCV } from '../../lib/ats';
+import type { BuiltCV } from '../../lib/ats';
+
+export function getStaticPaths() {
+  return variants.map((variant) => ({
+    params: { variant: variant.id },
+    props: { doc: buildCV(cv, variant) },
+  }));
+}
+
+interface Props {
+  doc: BuiltCV;
+}
+
+const { doc } = Astro.props;
+---
+
+<ATSDocument doc={doc} />

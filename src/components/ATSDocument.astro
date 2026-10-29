@@ -1,0 +1,364 @@
+---
+import type { BuiltCV } from '../lib/ats';
+
+interface Props {
+  doc: BuiltCV;
+}
+
+const { doc } = Astro.props;
+const title = `CV — ${doc.name}`;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content={`Currículum de ${doc.name}. ${doc.headline}.`}
+    />
+    <meta name="generator" content={Astro.generator} />
+    <meta property="og:title" content={title} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <style is:global>
+      :root {
+        color-scheme: light;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #f4f4f2;
+        color: #111111;
+        font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif;
+        font-size: 11pt;
+        line-height: 1.5;
+      }
+
+      .toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem 1rem;
+        padding: 0.75rem 1.5rem;
+        background: #ffffff;
+        border-bottom: 1px solid #dddddd;
+      }
+
+      .toolbar a,
+      .toolbar button {
+        font: inherit;
+        font-size: 10pt;
+        color: #111111;
+        text-decoration: none;
+        background: none;
+        border: 1px solid #cccccc;
+        border-radius: 999px;
+        padding: 0.4rem 0.9rem;
+        cursor: pointer;
+      }
+
+      .toolbar button {
+        background: #111111;
+        border-color: #111111;
+        color: #ffffff;
+      }
+
+      .toolbar-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .toolbar-label {
+        font-size: 10pt;
+        color: #555555;
+      }
+
+      .sheet {
+        max-width: 850px;
+        margin: 2rem auto;
+        padding: 3rem 3.25rem;
+        background: #ffffff;
+        border: 1px solid #e2e2e2;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 26pt;
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+      }
+
+      .headline {
+        margin: 0.35rem 0 0;
+        font-size: 12pt;
+        font-weight: 600;
+      }
+
+      .contact {
+        margin: 0.6rem 0 0;
+        font-size: 10pt;
+      }
+
+      .contact a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .contact span + span::before {
+        content: " · ";
+      }
+
+      section {
+        margin-top: 1.6rem;
+      }
+
+      h2 {
+        margin: 0 0 0.7rem;
+        padding-bottom: 0.25rem;
+        border-bottom: 1px solid #111111;
+        font-size: 11pt;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      p {
+        margin: 0.25rem 0;
+      }
+
+      .role {
+        margin: 0;
+        font-weight: 700;
+        font-size: 11.5pt;
+      }
+
+      .meta {
+        margin: 0;
+        font-size: 10pt;
+        color: #333333;
+      }
+
+      .job,
+      .edu {
+        margin-bottom: 0.95rem;
+      }
+
+      .job:last-child,
+      .edu:last-child {
+        margin-bottom: 0;
+      }
+
+      .note {
+        margin: 0.15rem 0 0;
+        font-size: 10.5pt;
+      }
+
+      ul {
+        margin: 0.35rem 0 0;
+        padding-left: 1.15rem;
+      }
+
+      li {
+        margin-bottom: 0.2rem;
+      }
+
+      .older-list {
+        margin: 0;
+        padding-left: 1.15rem;
+      }
+
+      .print-hint {
+        max-width: 850px;
+        margin: 0 auto 3rem;
+        padding: 0 1.5rem;
+        font-size: 10pt;
+        color: #555555;
+        text-align: center;
+      }
+
+      @media (max-width: 700px) {
+        .sheet {
+          margin: 0;
+          padding: 2rem 1.25rem;
+          border: 0;
+        }
+      }
+
+      @media print {
+        @page {
+          size: A4;
+          margin: 14mm 16mm;
+        }
+
+        body {
+          background: #ffffff;
+          font-size: 10.5pt;
+        }
+
+        .toolbar,
+        .print-hint {
+          display: none !important;
+        }
+
+        .sheet {
+          max-width: none;
+          margin: 0;
+          padding: 0;
+          border: 0;
+        }
+
+        a {
+          color: #111111;
+          text-decoration: none;
+        }
+
+        section,
+        .job,
+        .edu {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toolbar no-print">
+      <a href="/">← Volver a la web</a>
+      <div class="toolbar-actions">
+        <span class="toolbar-label">{doc.variant.label}</span>
+        <button id="print-button" type="button">Imprimir / Guardar PDF</button>
+      </div>
+    </div>
+
+    <main class="sheet">
+      <header>
+        <h1>{doc.name}</h1>
+        <p class="headline">{doc.headline}</p>
+        <p class="contact">
+          <span>{doc.location}</span>
+          <span><a href={`mailto:${doc.email}`}>{doc.email}</a></span>
+          <span><a href={`tel:${doc.phone.replace(/\s/g, '')}`}>{doc.phone}</a></span>
+        </p>
+        {doc.links.length > 0 && (
+          <p class="contact">
+            {doc.links.map((link) => (
+              <span>
+                <a href={link.url}>
+                  {link.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                </a>
+              </span>
+            ))}
+          </p>
+        )}
+      </header>
+
+      <section>
+        <h2>Perfil profesional</h2>
+        <p>{doc.summary}</p>
+      </section>
+
+      <section>
+        <h2>Experiencia profesional</h2>
+        {
+          doc.experience.map((job) => (
+            <article class="job">
+              <p class="role">{job.role}</p>
+              <p class="meta">
+                {job.company} · {job.location} · {job.start} — {job.end}
+              </p>
+              {job.summary && <p class="note">{job.summary}</p>}
+              {job.bullets.length > 0 && (
+                <ul>
+                  {job.bullets.map((bullet) => (
+                    <li>{bullet.text}</li>
+                  ))}
+                </ul>
+              )}
+              {job.tags && job.tags.length > 0 && (
+                <p class="note">
+                  <strong>Herramientas y áreas:</strong> {job.tags.join(', ')}
+                </p>
+              )}
+            </article>
+          ))
+        }
+      </section>
+
+      {doc.older.length > 0 && (
+        <section>
+          <h2>Experiencia anterior</h2>
+          <ul class="older-list">
+            {doc.older.map((job) => (
+              <li>
+                <strong>{job.role}</strong>, {job.company} ({job.start} — {job.end}).
+                {job.line ? ` ${job.line}` : ''}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <section>
+        <h2>Habilidades</h2>
+        <ul>
+          {
+            doc.skills.map((skill) => (
+              <li>
+                <strong>{skill.group}:</strong> {skill.items.join(', ')}
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section>
+        <h2>Formación académica</h2>
+        {
+          doc.education.map((item) => (
+            <article class="edu">
+              <p class="role">{item.degree}</p>
+              <p class="meta">
+                {item.institution} · {item.location} · {item.start} — {item.end}
+              </p>
+              {item.detail && <p class="note">{item.detail}</p>}
+            </article>
+          ))
+        }
+      </section>
+
+      <section>
+        <h2>Idiomas</h2>
+        <ul>
+          {
+            doc.languages.map((language) => (
+              <li>
+                <strong>{language.name}:</strong> {language.level}
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </main>
+
+    <p class="print-hint">
+      Esta página está pensada para imprimirse en A4 o guardarse como PDF desde
+      el navegador. Usa el botón superior.
+    </p>
+
+    <script>
+      document
+        .getElementById('print-button')
+        ?.addEventListener('click', () => window.print());
+    </script>
+  </body>
+</html>

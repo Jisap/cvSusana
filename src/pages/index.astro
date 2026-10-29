@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import Experience from '../components/Experience.astro';
+import Skills from '../components/Skills.astro';
+import Education from '../components/Education.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { cv } from '../data/cv';
+---
+
+<BaseLayout
+  title={`${cv.name} — ${cv.headline}`}
+  description={cv.summary}
+>
+  <SiteHeader />
+  <main>
+    <Hero />
+
+    <Section
+      id="perfil"
+      eyebrow="Perfil"
+      title="Venta consultiva y servicio impecable."
+    >
+      <div class="grid gap-8 md:grid-cols-[1.5fr_1fr] md:gap-16">
+        <p class="text-lg leading-relaxed text-ink-soft">
+          Llevo más de una década en el lado del cliente: escuchando, asesorando
+          y construyendo relaciones que vuelven. Me muevo igual de bien en la
+          venta de una pieza de lujo que en la operativa diaria de una tienda de
+          alto tráfico.
+        </p>
+        <ul class="space-y-3 border-t border-line pt-6 text-sm text-ink-soft md:border-l md:border-t-0 md:pl-8 md:pt-0">
+          <li class="flex gap-3">
+            <span class="text-accent">01</span>
+            Venta consultiva y fidelización de clientela VIP.
+          </li>
+          <li class="flex gap-3">
+            <span class="text-accent">02</span>
+            Operativa de tienda, stock y visual merchandising.
+          </li>
+          <li class="flex gap-3">
+            <span class="text-accent">03</span>
+            Atención internacional en español, inglés y francés.
+          </li>
+        </ul>
+      </div>
+    </Section>
+
+    <Section
+      id="experiencia"
+      eyebrow="Experiencia"
+      title="Trayectoria profesional"
+    >
+      <Experience />
+    </Section>
+
+    <Section
+      id="habilidades"
+      eyebrow="Habilidades"
+      title="Herramientas y capacidades"
+    >
+      <Skills />
+    </Section>
+
+    <Section
+      id="formacion"
+      eyebrow="Formación"
+      title="Estudios e idiomas"
+    >
+      <Education />
+    </Section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

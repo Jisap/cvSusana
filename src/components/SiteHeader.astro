@@ -1,0 +1,52 @@
+﻿---
+import { cv } from '../data/cv';
+
+const nav = [
+  { href: '/#perfil', label: 'Perfil' },
+  { href: '/#experiencia', label: 'Experiencia' },
+  { href: '/#habilidades', label: 'Habilidades' },
+  { href: '/#formacion', label: 'Formación' },
+  { href: '/#contacto', label: 'Contacto' },
+];
+---
+
+<header
+  class="sticky top-0 z-40 border-b border-line/70 bg-surface/80 backdrop-blur"
+>
+  <div
+    class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4"
+  >
+    <a
+      href="/#top"
+      class="font-display text-lg tracking-tight transition-colors hover:text-accent"
+    >
+      {cv.name}
+    </a>
+
+    <nav class="hidden items-center gap-6 text-sm text-ink-soft sm:flex">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            class="transition-colors hover:text-ink"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a
+        href="/cv"
+        class="rounded-full bg-ink px-4 py-2 font-medium text-surface transition-colors hover:bg-accent hover:text-accent-ink"
+      >
+        CV · PDF
+      </a>
+    </nav>
+
+    <a
+      href="/cv"
+      class="rounded-full bg-ink px-4 py-2 text-sm font-medium text-surface sm:hidden"
+    >
+      CV
+    </a>
+  </div>
+</header>

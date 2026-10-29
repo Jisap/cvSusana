@@ -1,0 +1,414 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { cv } from '../data/cv';
+import { variants } from '../data/variants';
+import {
+  auditCV,
+  buildCV,
+  documentEvidence,
+  documentText,
+  estimatePages,
+} from '../lib/ats';
+
+const reports = variants.map((variant) => {
+  const doc = buildCV(cv, variant);
+  return {
+    variant,
+    doc,
+    pages: estimatePages(doc),
+    issues: auditCV(cv, variant, doc),
+    coverage: Math.round((doc.keywordsFound.length / variant.keywords.length) * 100),
+  };
+});
+
+const variantDocs = reports.map(({ variant, doc }) => ({
+  id: variant.id,
+  label: variant.label,
+  text: documentText(doc),
+  evidence: documentEvidence(doc),
+  keywords: variant.keywords,
+}));
+---
+
+<BaseLayout
+  title={`Analizador ATS — ${cv.name}`}
+  description="Compara una oferta de empleo con las versiones del CV y detecta los términos que faltan."
+>
+  <SiteHeader />
+  <main class="mx-auto max-w-5xl px-6 py-12 md:py-16">
+    <a
+      href="/"
+      class="text-sm text-ink-soft transition-colors hover:text-accent"
+    >
+      ← Volver a la web
+    </a>
+
+    <p class="mt-8 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+      Herramienta ATS
+    </p>
+    <h1 class="mt-3 font-display text-4xl tracking-tight md:text-5xl">
+      Adapta el CV a cada oferta
+    </h1>
+    <p class="mt-4 max-w-2xl text-lg leading-relaxed text-ink-soft">
+      Pega la descripción de la oferta. La herramienta compara su vocabulario
+      con las cuatro versiones del CV, recomienda la más cercana y señala los
+      términos que conviene incorporar si son ciertos.
+    </p>
+
+    <div class="mt-10 grid gap-6 md:grid-cols-[1.1fr_1fr] md:items-start">
+      <form
+        id="ats-form"
+        class="rounded-3xl border border-line bg-surface-muted/40 p-6"
+      >
+        <label
+          for="job-text"
+          class="text-xs font-semibold uppercase tracking-[0.16em] text-ink-soft"
+        >
+          Oferta de empleo
+        </label>
+        <textarea
+          id="job-text"
+          rows="12"
+          class="mt-3 w-full resize-y rounded-2xl border border-line bg-surface p-4 text-sm leading-relaxed text-ink outline-none transition-colors placeholder:text-ink-soft/60 focus:border-accent"
+          placeholder="Pega aquí la descripción del puesto, los requisitos y las funciones..."
+        ></textarea>
+
+        <button
+          type="submit"
+          class="mt-4 w-full rounded-full bg-ink px-6 py-3 text-sm font-medium text-surface transition-colors hover:bg-accent hover:text-accent-ink"
+        >
+          Analizar oferta
+        </button>
+
+        <p class="mt-3 text-xs leading-relaxed text-ink-soft">
+          El texto se analiza en tu navegador. No se envía a ningún servidor.
+        </p>
+      </form>
+
+      <section
+        class="rounded-3xl border border-line bg-surface p-6"
+        aria-live="polite"
+      >
+        <div id="ats-empty">
+          <p class="text-sm leading-relaxed text-ink-soft">
+            Pega una oferta y pulsa «Analizar oferta» para ver la cobertura de
+            palabras clave y la versión recomendada.
+          </p>
+        </div>
+
+        <div id="ats-result" hidden>
+          <div class="flex items-end justify-between gap-4">
+            <p id="result-score" class="font-display text-6xl leading-none">
+              0%
+            </p>
+            <p id="result-count" class="pb-1 text-right text-sm text-ink-soft">
+              0 de 0 términos
+            </p>
+          </div>
+
+          <div class="mt-4 h-2 rounded-full bg-surface-muted">
+            <div
+              id="result-bar"
+              class="h-2 rounded-full bg-accent transition-[width] duration-500"
+              style="width: 0%"
+            ></div>
+          </div>
+
+          <div class="mt-5 rounded-2xl bg-surface-muted/60 p-4">
+            <p class="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-ink-soft">
+              Versión recomendada
+            </p>
+            <p id="result-best" class="mt-1 font-medium"></p>
+            <a
+              id="result-link"
+              href="/cv"
+              class="mt-2 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
+            >
+              Abrir CV adaptado →
+            </a>
+            <p id="result-fit" class="mt-2 text-xs leading-relaxed text-ink-soft"></p>
+          </div>
+
+          <ul id="result-ranking" class="mt-5 space-y-1 text-sm"></ul>
+
+          <div class="mt-6">
+            <h2 class="text-sm font-semibold">
+              Términos que faltan
+              <span
+                id="result-missing-count"
+                class="ml-1 font-normal text-ink-soft"
+              ></span>
+            </h2>
+            <ul id="result-missing" class="mt-3 flex flex-wrap gap-2"></ul>
+            <p
+              id="result-missing-empty"
+              hidden
+              class="mt-3 text-sm text-ink-soft"
+            >
+              Ningún término relevante de la oferta queda fuera.
+            </p>
+          </div>
+
+          <details class="mt-6">
+            <summary
+              class="cursor-pointer text-sm font-medium text-ink-soft transition-colors hover:text-ink"
+            >
+              Ver coincidencias
+            </summary>
+            <ul id="result-matched" class="mt-3 flex flex-wrap gap-2"></ul>
+          </details>
+
+          <p class="mt-6 text-xs leading-relaxed text-ink-soft">
+            Añade solo términos que pueda demostrar en una entrevista. El
+            análisis es orientativo: ningún ATS puntúa exactamente igual.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <section class="mt-16">
+      <h2 class="font-display text-2xl tracking-tight md:text-3xl">
+        Versiones disponibles
+      </h2>
+      <p class="mt-2 max-w-2xl text-sm leading-relaxed text-ink-soft">
+        Cada versión comparte el mismo contenido maestro, pero selecciona los
+        puestos, las viñetas y las palabras clave que más pesan en su tipo de
+        oferta. Los puestos antiguos se condensan a una línea.
+      </p>
+
+      <ul class="mt-6 grid gap-5 sm:grid-cols-2">
+        {
+          reports.map(({ variant, doc, pages, issues, coverage }) => (
+            <li class="flex flex-col rounded-2xl border border-line bg-surface-muted/40 p-6">
+              <h3 class="font-semibold tracking-tight">{variant.label}</h3>
+              <p class="mt-1 text-sm leading-relaxed text-ink-soft">
+                {variant.focus}
+              </p>
+
+              <dl class="mt-5 grid grid-cols-3 gap-3 text-center">
+                <div class="rounded-xl bg-surface px-2 py-3">
+                  <dd class="font-display text-xl">{coverage}%</dd>
+                  <dt class="mt-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-ink-soft">
+                    Palabras clave
+                  </dt>
+                </div>
+                <div class="rounded-xl bg-surface px-2 py-3">
+                  <dd class="font-display text-xl">
+                    {doc.experience.reduce(
+                      (total, job) => total + job.bullets.length,
+                      0,
+                    )}
+                  </dd>
+                  <dt class="mt-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-ink-soft">
+                    Viñetas
+                  </dt>
+                </div>
+                <div class="rounded-xl bg-surface px-2 py-3">
+                  <dd class="font-display text-xl">{pages}</dd>
+                  <dt class="mt-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-ink-soft">
+                    Páginas
+                  </dt>
+                </div>
+              </dl>
+
+              <ul class="mt-4 space-y-1.5 text-xs leading-relaxed text-ink-soft">
+                {issues.map((issue) => (
+                  <li class="flex gap-2">
+                    <span
+                      aria-hidden="true"
+                      class={
+                        issue.level === 'info'
+                          ? 'text-ink-soft/60'
+                          : 'text-accent'
+                      }
+                    >
+                      {issue.level === 'info' ? '·' : '!'}
+                    </span>
+                    <span>{issue.message}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href={`/cv/${variant.id}`}
+                class="mt-5 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
+              >
+                Ver versión {variant.label.toLowerCase()} →
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </main>
+  <SiteFooter />
+
+  <script
+    is:inline
+    type="application/json"
+    id="ats-data"
+    set:html={JSON.stringify({ docs: variantDocs })}
+  ></script>
+
+  <script>
+    import { analyzeText, termAppears } from '../lib/ats';
+    import type { Analysis } from '../lib/ats';
+
+    interface VariantDoc {
+      id: string;
+      label: string;
+      text: string;
+      evidence: string;
+      keywords: string[];
+    }
+
+    interface AnalyzedDoc extends VariantDoc {
+      analysis: Analysis;
+      evidenceAnalysis: Analysis;
+      keywordHits: number;
+      fit: number;
+      overall: number;
+    }
+
+    const dataElement = document.getElementById('ats-data');
+    const data = (dataElement
+      ? JSON.parse(dataElement.textContent || '{}')
+      : { docs: [] }) as { docs: VariantDoc[] };
+    const docs = data.docs;
+
+    function makeChip(text: string, matched: boolean): HTMLLIElement {
+      const item = document.createElement('li');
+      item.className = matched
+        ? 'rounded-full bg-accent-soft px-3 py-1 text-xs text-ink'
+        : 'rounded-full border border-line px-3 py-1 text-xs text-ink-soft';
+      item.textContent = text;
+      return item;
+    }
+
+    const form = document.getElementById('ats-form');
+    const textarea = document.getElementById(
+      'job-text',
+    ) as HTMLTextAreaElement | null;
+    const empty = document.getElementById('ats-empty');
+    const result = document.getElementById('ats-result');
+
+    if (form && textarea && empty && result) {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const jobText = textarea.value.trim();
+
+        if (jobText.length < 40) {
+          empty.textContent =
+            'Pega una descripción más completa (al menos 40 caracteres) para poder comparar.';
+          empty.hidden = false;
+          result.hidden = true;
+          return;
+        }
+
+        const enriched = docs.map((doc) => {
+          const analysis = analyzeText(jobText, doc.text);
+          const evidenceAnalysis = analyzeText(jobText, doc.evidence);
+          const keywordHits = doc.keywords.filter((keyword) =>
+            termAppears(jobText, keyword),
+          ).length;
+          return { ...doc, analysis, evidenceAnalysis, keywordHits };
+        });
+        const maxHits = Math.max(
+          1,
+          ...enriched.map((doc) => doc.keywordHits),
+        );
+        const analyses: AnalyzedDoc[] = enriched
+          .map((doc) => {
+            const fit = Math.round((doc.keywordHits / maxHits) * 100);
+            const overall = Math.round(
+              doc.analysis.score * 0.45 +
+                doc.evidenceAnalysis.score * 0.35 +
+                fit * 0.2,
+            );
+            return { ...doc, fit, overall };
+          })
+          .sort((a, b) => b.overall - a.overall);
+
+        const best = analyses[0];
+        if (!best) return;
+
+        const score = document.getElementById('result-score');
+        const count = document.getElementById('result-count');
+        const bar = document.getElementById('result-bar');
+        const bestLabel = document.getElementById('result-best');
+        const bestLink = document.getElementById(
+          'result-link',
+        ) as HTMLAnchorElement | null;
+        const ranking = document.getElementById('result-ranking');
+        const fitLine = document.getElementById('result-fit');
+        const missingList = document.getElementById('result-missing');
+        const missingCount = document.getElementById('result-missing-count');
+        const missingEmpty = document.getElementById('result-missing-empty');
+        const matchedList = document.getElementById('result-matched');
+
+        if (
+          !score ||
+          !count ||
+          !bar ||
+          !bestLabel ||
+          !bestLink ||
+          !ranking ||
+          !fitLine ||
+          !missingList ||
+          !missingCount ||
+          !missingEmpty ||
+          !matchedList
+        ) {
+          return;
+        }
+
+        empty.hidden = true;
+        result.hidden = false;
+
+        score.textContent = `${best.overall}%`;
+        count.textContent = `${best.analysis.matched} de ${best.analysis.total} términos`;
+        bar.style.width = `${best.overall}%`;
+        bestLabel.textContent = best.label;
+        bestLink.href = `/cv/${best.id}`;
+        fitLine.textContent = `Cobertura del CV ${best.analysis.score}% · evidencia ${best.evidenceAnalysis.score}% · encaje con la oferta ${best.fit}%`;
+
+        ranking.replaceChildren();
+        for (const entry of analyses) {
+          const row = document.createElement('li');
+          row.className =
+            'flex items-center justify-between gap-3 border-b border-line py-1.5 last:border-0';
+
+          const label = document.createElement('span');
+          label.textContent = entry.label;
+          if (entry.id === best.id) label.className = 'font-medium text-accent';
+
+          const value = document.createElement('span');
+          value.className = 'text-ink-soft';
+          value.textContent = `${entry.overall}% · encaje ${entry.fit}%`;
+
+          row.append(label, value);
+          ranking.append(row);
+        }
+
+        const missing = best.analysis.terms.filter((term) => !term.matched);
+        const matched = best.analysis.terms.filter((term) => term.matched);
+
+        missingList.replaceChildren();
+        for (const term of missing.slice(0, 24)) {
+          missingList.append(makeChip(term.term, false));
+        }
+        missingCount.textContent = `(${missing.length})`;
+        missingEmpty.hidden = missing.length > 0;
+
+        matchedList.replaceChildren();
+        for (const term of matched.slice(0, 30)) {
+          matchedList.append(makeChip(term.term, true));
+        }
+
+        result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    }
+  </script>
+</BaseLayout>

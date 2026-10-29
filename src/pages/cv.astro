@@ -1,0 +1,15 @@
+---
+import ATSDocument from '../components/ATSDocument.astro';
+import { cv } from '../data/cv';
+import { buildCV, getVariant } from '../lib/ats';
+import { defaultVariantId } from '../data/variants';
+
+const variant = getVariant(defaultVariantId);
+if (!variant) {
+  throw new Error(`Variante por defecto no encontrada: ${defaultVariantId}`);
+}
+
+const doc = buildCV(cv, variant);
+---
+
+<ATSDocument doc={doc} />

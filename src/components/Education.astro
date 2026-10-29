@@ -1,0 +1,45 @@
+---
+import { cv } from '../data/cv';
+---
+
+<div class="grid gap-12 md:grid-cols-[1.6fr_1fr] md:gap-16">
+  <div>
+    <h3 class="text-xs font-semibold uppercase tracking-[0.2em] text-ink-soft">
+      Formación
+    </h3>
+    <ol class="mt-5 space-y-7">
+      {
+        cv.education.map((item) => (
+          <li class="border-l border-line pl-5">
+            <p class="text-sm text-ink-soft">
+              {item.start} — {item.end} · {item.location}
+            </p>
+            <h4 class="mt-1 font-semibold tracking-tight">{item.degree}</h4>
+            <p class="text-sm text-accent">{item.institution}</p>
+            {item.detail && (
+              <p class="mt-2 text-sm leading-relaxed text-ink-soft">
+                {item.detail}
+              </p>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  <div>
+    <h3 class="text-xs font-semibold uppercase tracking-[0.2em] text-ink-soft">
+      Idiomas
+    </h3>
+    <dl class="mt-5 divide-y divide-line border-y border-line">
+      {
+        cv.languages.map((language) => (
+          <div class="flex items-baseline justify-between gap-4 py-3">
+            <dt class="font-medium">{language.name}</dt>
+            <dd class="text-sm text-ink-soft">{language.level}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</div>
