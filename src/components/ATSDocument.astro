@@ -1,5 +1,6 @@
 ---
 import type { BuiltCV } from '../lib/ats';
+import { variants } from '../data/variants';
 
 interface Props {
   doc: BuiltCV;
@@ -55,16 +56,42 @@ const title = `CV — ${doc.name}`;
       }
 
       .toolbar a,
-      .toolbar button {
+      .toolbar button,
+      .toolbar select {
         font: inherit;
         font-size: 10pt;
         color: #111111;
         text-decoration: none;
-        background: none;
+        background: #ffffff;
         border: 1px solid #cccccc;
         border-radius: 999px;
         padding: 0.4rem 0.9rem;
         cursor: pointer;
+      }
+
+      .toolbar select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-color: #ffffff;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23555555' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.85rem center;
+        background-size: 0.85rem;
+        padding: 0.4rem 2.4rem 0.4rem 1rem;
+        font-weight: 500;
+        outline: none;
+        border-radius: 999px;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .toolbar select:hover {
+        border-color: #999999;
+      }
+
+      .toolbar select:focus {
+        border-color: #111111;
+        box-shadow: 0 0 0 2px rgba(17, 17, 17, 0.1);
       }
 
       .toolbar button {
@@ -233,9 +260,21 @@ const title = `CV — ${doc.name}`;
   </head>
   <body>
     <div class="toolbar no-print">
-      <a href="/">← Volver a la web</a>
+      <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <a href="/">← Volver a la web</a>
+        <a href="/ats" style="border-style: dashed;">Analizador ATS</a>
+      </div>
       <div class="toolbar-actions">
-        <span class="toolbar-label">{doc.variant.label}</span>
+        <label for="variant-select" class="toolbar-label">Versión:</label>
+        <select id="variant-select" aria-label="Seleccionar versión del CV">
+          {
+            variants.map((v) => (
+              <option value={`/cv/${v.id}`} selected={v.id === doc.variant.id}>
+                {v.label}
+              </option>
+            ))
+          }
+        </select>
         <button id="print-button" type="button">Imprimir / Guardar PDF</button>
       </div>
     </div>
@@ -359,6 +398,14 @@ const title = `CV — ${doc.name}`;
       document
         .getElementById('print-button')
         ?.addEventListener('click', () => window.print());
+
+      const variantSelect = document.getElementById('variant-select') as HTMLSelectElement | null;
+      variantSelect?.addEventListener('change', (e) => {
+        const target = e.target as HTMLSelectElement;
+        if (target.value) {
+          window.location.href = target.value;
+        }
+      });
     </script>
   </body>
 </html>
