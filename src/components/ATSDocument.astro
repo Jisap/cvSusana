@@ -1,6 +1,6 @@
 ---
-import type { BuiltCV } from '../lib/ats';
-import { variants } from '../data/variants';
+import type { BuiltCV } from "../lib/ats";
+import { variants } from "../data/variants";
 
 interface Props {
   doc: BuiltCV;
@@ -82,7 +82,9 @@ const title = `CV — ${doc.name}`;
         font-weight: 500;
         outline: none;
         border-radius: 999px;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        transition:
+          border-color 0.15s ease,
+          box-shadow 0.15s ease;
       }
 
       .toolbar select:hover {
@@ -230,7 +232,8 @@ const title = `CV — ${doc.name}`;
 
         body {
           background: #ffffff;
-          font-size: 10.5pt;
+          font-size: 10pt;
+          line-height: 1.4;
         }
 
         .toolbar,
@@ -245,22 +248,34 @@ const title = `CV — ${doc.name}`;
           border: 0;
         }
 
+        section {
+          margin-top: 1.2rem;
+          break-inside: auto;
+        }
+
+        h2 {
+          break-after: avoid;
+          page-break-after: avoid;
+        }
+
         a {
           color: #111111;
           text-decoration: none;
         }
 
-        section,
         .job,
         .edu {
           break-inside: avoid;
+          page-break-inside: avoid;
         }
       }
     </style>
   </head>
   <body>
     <div class="toolbar no-print">
-      <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+      <div
+        style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;"
+      >
         <a href="/">← Volver a la web</a>
         <a href="/ats" style="border-style: dashed;">Analizador ATS</a>
       </div>
@@ -286,19 +301,24 @@ const title = `CV — ${doc.name}`;
         <p class="contact">
           <span>{doc.location}</span>
           <span><a href={`mailto:${doc.email}`}>{doc.email}</a></span>
-          <span><a href={`tel:${doc.phone.replace(/\s/g, '')}`}>{doc.phone}</a></span>
+          <span
+            ><a href={`tel:${doc.phone.replace(/\s/g, "")}`}>{doc.phone}</a
+            ></span
+          >
         </p>
-        {doc.links.length > 0 && (
-          <p class="contact">
-            {doc.links.map((link) => (
-              <span>
-                <a href={link.url}>
-                  {link.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-                </a>
-              </span>
-            ))}
-          </p>
-        )}
+        {
+          doc.links.length > 0 && (
+            <p class="contact">
+              {doc.links.map((link) => (
+                <span>
+                  <a href={link.url}>
+                    {link.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                  </a>
+                </span>
+              ))}
+            </p>
+          )
+        }
       </header>
 
       <section>
@@ -325,7 +345,7 @@ const title = `CV — ${doc.name}`;
               )}
               {job.tags && job.tags.length > 0 && (
                 <p class="note">
-                  <strong>Herramientas y áreas:</strong> {job.tags.join(', ')}
+                  <strong>Herramientas y áreas:</strong> {job.tags.join(", ")}
                 </p>
               )}
             </article>
@@ -333,19 +353,22 @@ const title = `CV — ${doc.name}`;
         }
       </section>
 
-      {doc.older.length > 0 && (
-        <section>
-          <h2>Experiencia anterior</h2>
-          <ul class="older-list">
-            {doc.older.map((job) => (
-              <li>
-                <strong>{job.role}</strong>, {job.company} ({job.start} — {job.end}).
-                {job.line ? ` ${job.line}` : ''}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      {
+        doc.older.length > 0 && (
+          <section>
+            <h2>Experiencia anterior</h2>
+            <ul class="older-list">
+              {doc.older.map((job) => (
+                <li>
+                  <strong>{job.role}</strong>, {job.company} ({job.start} —{" "}
+                  {job.end}).
+                  {job.line ? ` ${job.line}` : ""}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
 
       <section>
         <h2>Habilidades</h2>
@@ -353,7 +376,7 @@ const title = `CV — ${doc.name}`;
           {
             doc.skills.map((skill) => (
               <li>
-                <strong>{skill.group}:</strong> {skill.items.join(', ')}
+                <strong>{skill.group}:</strong> {skill.items.join(", ")}
               </li>
             ))
           }
@@ -396,11 +419,13 @@ const title = `CV — ${doc.name}`;
 
     <script>
       document
-        .getElementById('print-button')
-        ?.addEventListener('click', () => window.print());
+        .getElementById("print-button")
+        ?.addEventListener("click", () => window.print());
 
-      const variantSelect = document.getElementById('variant-select') as HTMLSelectElement | null;
-      variantSelect?.addEventListener('change', (e) => {
+      const variantSelect = document.getElementById(
+        "variant-select",
+      ) as HTMLSelectElement | null;
+      variantSelect?.addEventListener("change", (e) => {
         const target = e.target as HTMLSelectElement;
         if (target.value) {
           window.location.href = target.value;
