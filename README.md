@@ -1,24 +1,26 @@
-# CV Susana — landing + versiones ATS
+# CV Susana Guzmán Vázquez — landing + versiones ATS
 
-Landing personal y generador de versiones del currículum para una asesora de
-ventas con más de una década de experiencia en firmas de moda. Cada versión se
-adapta a una familia de ofertas y se puede guardar como PDF ATS.
-
-> **Importante:** el contenido actual de `src/data/cv.ts` es un ejemplo
-> realista, no los datos reales de Susana. Hay que sustituir nombre, contacto,
-> empresas, fechas y métricas antes de publicar.
+Landing personal y generador de versiones del currículum para Susana Guzmán Vázquez,
+profesional del retail y la moda con más de 20 años de experiencia en venta consultiva,
+corners en El Corte Inglés (IKKS, Roberto Verino, Mayoral) y gestión de tiendas.
+Cada versión se adapta a una familia de ofertas y se puede guardar como PDF optimizado para ATS.
 
 ## URLs
 
 | Ruta | Contenido |
 | --- | --- |
-| `/` | Landing moderna con el CV completo (contenido maestro) |
-| `/cv` | Versión ATS por defecto (retail de lujo) |
-| `/cv/retail-lujo` | Client Advisor / asesora de ventas en lujo |
-| `/cv/dependienta` | Dependienta / Sales Assistant |
-| `/cv/visual-merchandising` | Visual merchandiser / asesora de imagen |
-| `/cv/supervision-tienda` | Supervisión / coordinación de tienda |
-| `/ats` | Analizador: pega una oferta y recomienda versión + carencias |
+| `/` | Landing moderna y editorial con el CV completo y fotografía |
+| `/cv` | Versión ATS por defecto (`dependienta`) con selector integrado |
+| `/cv/dependienta` | Dependienta · Asesora de ventas en retail de moda |
+| `/cv/retail-lujo` | Asesora de moda · Client Advisor en El Corte Inglés |
+| `/cv/supervision-tienda` | Encargada de tienda · Responsable de punto de venta |
+| `/cv/visual-merchandising` | Escaparatista · Asesora de moda y visual merchandising |
+| `/ats` | Analizador ATS: compara una oferta, recomienda versión y detecta carencias |
+
+> **Acceso a la herramienta ATS:**
+> Para mantener la web limpia de cara a reclutadores, el analizador `/ats` está accesible de forma discreta:
+> 1. Pulsando en el símbolo **`©`** del copyright en el pie de página de la web.
+> 2. Mediante el atajo de teclado **`Ctrl + Shift + A`** (o `Cmd + Shift + A` en Mac).
 
 ## Stack
 
