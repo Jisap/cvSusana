@@ -1,11 +1,13 @@
 ---
-import { cv } from '../data/cv';
+import { cv } from "../data/cv";
 
 const year = new Date().getFullYear();
 ---
 
 <footer id="contacto" class="mx-auto max-w-5xl px-6 pb-16">
-  <div class="relative overflow-hidden rounded-3xl bg-ink px-8 py-12 text-surface sm:px-12 sm:py-16">
+  <div
+    class="relative overflow-hidden rounded-3xl bg-ink px-8 py-12 text-surface sm:px-12 sm:py-16"
+  >
     <div
       aria-hidden="true"
       class="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-accent opacity-20 blur-3xl"
@@ -41,14 +43,18 @@ const year = new Date().getFullYear();
     </div>
   </div>
 
-  <div class="mt-8 flex flex-col gap-3 text-sm text-ink-soft sm:flex-row sm:items-center sm:justify-between">
+  <div
+    class="mt-8 flex flex-col gap-3 text-sm text-ink-soft sm:flex-row sm:items-center sm:justify-between"
+  >
     <p>
       <a
         href="/ats"
         class="text-inherit no-underline hover:text-inherit focus:outline-none"
         title="Área de gestión"
-        aria-label="Gestión"
-      >©</a> {year} {cv.name}. Todos los derechos reservados.
+        aria-label="Gestión">©</a
+      >
+      {year}
+      {cv.name}. Todos los derechos reservados.
     </p>
     <ul class="flex flex-wrap gap-5">
       {

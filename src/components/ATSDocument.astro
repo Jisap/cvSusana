@@ -429,7 +429,11 @@ const title = `CV — ${doc.name}`;
 
       // Atajo de teclado discreto para la propietaria: Ctrl + Shift + A
       window.addEventListener("keydown", (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "A" || e.key === "a")) {
+        if (
+          (e.ctrlKey || e.metaKey) &&
+          e.shiftKey &&
+          (e.key === "A" || e.key === "a")
+        ) {
           e.preventDefault();
           window.location.href = "/ats";
         }
