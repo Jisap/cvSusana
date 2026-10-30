@@ -42,13 +42,15 @@ const year = new Date().getFullYear();
   </div>
 
   <div class="mt-8 flex flex-col gap-3 text-sm text-ink-soft sm:flex-row sm:items-center sm:justify-between">
-    <p>© {year} {cv.name}. Todos los derechos reservados.</p>
+    <p>
+      <a
+        href="/ats"
+        class="text-inherit no-underline hover:text-inherit focus:outline-none"
+        title="Área de gestión"
+        aria-label="Gestión"
+      >©</a> {year} {cv.name}. Todos los derechos reservados.
+    </p>
     <ul class="flex flex-wrap gap-5">
-      <li>
-        <a href="/ats" class="transition-colors hover:text-accent">
-          Analizador ATS
-        </a>
-      </li>
       {
         cv.links.map((link) => (
           <li>

@@ -273,12 +273,7 @@ const title = `CV — ${doc.name}`;
   </head>
   <body>
     <div class="toolbar no-print">
-      <div
-        style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;"
-      >
-        <a href="/">← Volver a la web</a>
-        <a href="/ats" style="border-style: dashed;">Analizador ATS</a>
-      </div>
+      <a href="/">← Volver a la web</a>
       <div class="toolbar-actions">
         <label for="variant-select" class="toolbar-label">Versión:</label>
         <select id="variant-select" aria-label="Seleccionar versión del CV">
@@ -429,6 +424,14 @@ const title = `CV — ${doc.name}`;
         const target = e.target as HTMLSelectElement;
         if (target.value) {
           window.location.href = target.value;
+        }
+      });
+
+      // Atajo de teclado discreto para la propietaria: Ctrl + Shift + A
+      window.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "A" || e.key === "a")) {
+          e.preventDefault();
+          window.location.href = "/ats";
         }
       });
     </script>
