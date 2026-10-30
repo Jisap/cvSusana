@@ -2,21 +2,36 @@
 import { cv } from '../data/cv';
 ---
 
-<ul class="grid gap-5 sm:grid-cols-2">
+<div class="space-y-12">
   {
-    cv.skills.map((skill) => (
-      <li class="rounded-2xl border border-line bg-surface-muted/50 p-6">
-        <h3 class="text-sm font-semibold uppercase tracking-[0.14em] text-ink">
-          {skill.group}
-        </h3>
-        <ul class="mt-4 flex flex-wrap gap-2">
-          {skill.items.map((item) => (
-            <li class="rounded-full border border-line bg-surface px-3 py-1 text-sm text-ink-soft">
-              {item}
-            </li>
-          ))}
-        </ul>
-      </li>
-    ))
+    cv.skills.map((skill) => {
+      const isSoftware = skill.group.toLowerCase().includes('herramienta');
+
+      return (
+        <div class="border-t border-line/70 pt-6">
+          <div class="grid gap-6 md:grid-cols-[14rem_1fr] md:gap-12">
+            <div>
+              <h3 class="font-display text-xl tracking-tight text-ink">
+                {skill.group}
+              </h3>
+              {isSoftware && (
+                <p class="mt-1 text-xs uppercase tracking-widest text-accent">
+                  Diseño & Ofimática
+                </p>
+              )}
+            </div>
+
+            <ul class="flex flex-wrap gap-x-6 gap-y-3 text-base text-ink-soft">
+              {skill.items.map((item) => (
+                <li class="flex items-center gap-2">
+                  <span class="h-1.5 w-1.5 rounded-full bg-accent/60" aria-hidden="true" />
+                  <span class="transition-colors hover:text-ink">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+    })
   }
-</ul>
+</div>
