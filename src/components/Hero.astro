@@ -1,5 +1,5 @@
 ---
-import { cv } from '../data/cv';
+import { cv } from "../data/cv";
 ---
 
 <section id="top" class="relative overflow-hidden">
@@ -77,49 +77,67 @@ import { cv } from '../data/cv';
     </div>
 
     <aside
-      class="rounded-3xl border border-line bg-surface-muted/70 p-7 shadow-sm backdrop-blur"
+      class="group relative overflow-hidden rounded-3xl border border-line bg-surface-muted/60 p-5 shadow-sm backdrop-blur transition-all duration-300 hover:shadow-md sm:p-6"
     >
-      <p class="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-ink-soft">
-        Datos rápidos
-      </p>
-      <dl class="mt-5 space-y-4 text-sm">
-        <div>
-          <dt class="text-ink-soft">Ubicación</dt>
-          <dd class="mt-0.5 font-medium">{cv.location}</dd>
+      <div
+        class="relative mx-auto aspect-[4/5] w-full overflow-hidden rounded-2xl bg-surface-muted shadow-inner"
+      >
+        <img
+          src="/susana.jpg"
+          alt={`Retrato profesional de ${cv.name}`}
+          width="480"
+          height="600"
+          loading="eager"
+          decoding="async"
+          class="h-full w-full object-cover object-[center_20%] transition-transform duration-500 group-hover:scale-[1.02]"
+        />
+        <div
+          class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent pb-4 pt-12 px-4 text-white sm:pb-5 sm:px-5"
+        >
+          <p
+            class="text-[0.72rem] font-bold uppercase tracking-[0.2em] text-white/90 drop-shadow-sm flex items-center gap-1.5"
+          >
+            <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+            {cv.location}
+          </p>
+          <p class="mt-0.5 font-display text-xl font-medium tracking-tight text-white drop-shadow-sm sm:text-2xl">
+            {cv.name}
+          </p>
         </div>
-        <div>
-          <dt class="text-ink-soft">Email</dt>
-          <dd class="mt-0.5 font-medium">
-            <a class="hover:text-accent" href={`mailto:${cv.email}`}>{cv.email}</a>
-          </dd>
+      </div>
+
+      <div class="mt-5 space-y-3 text-sm">
+        <div
+          class="flex items-center justify-between border-b border-line/70 pb-2.5"
+        >
+          <span class="text-ink-soft">Teléfono</span>
+          <a
+            class="font-medium hover:text-accent"
+            href={`tel:${cv.phone.replace(/\s/g, "")}`}
+          >
+            {cv.phone}
+          </a>
         </div>
-        <div>
-          <dt class="text-ink-soft">Teléfono</dt>
-          <dd class="mt-0.5 font-medium">
-            <a class="hover:text-accent" href={`tel:${cv.phone.replace(/\s/g, '')}`}>
-              {cv.phone}
-            </a>
-          </dd>
+        <div
+          class="flex items-center justify-between border-b border-line/70 pb-2.5"
+        >
+          <span class="text-ink-soft">Email</span>
+          <a class="font-medium hover:text-accent" href={`mailto:${cv.email}`}>
+            {cv.email}
+          </a>
         </div>
-        <div>
-          <dt class="text-ink-soft">Idiomas</dt>
-          <dd class="mt-0.5 font-medium">
-            {cv.languages.map((language) => language.name).join(' · ')}
-          </dd>
+        <div class="flex items-center justify-between pt-0.5">
+          <span class="text-ink-soft">Idiomas</span>
+          <span class="font-medium">
+            {cv.languages.map((language) => language.name).join(" · ")}
+          </span>
         </div>
-      </dl>
-      <div class="mt-7 border-t border-line pt-5">
-        <p class="font-display text-2xl leading-tight">
-          “La venta empieza por escuchar.”
-        </p>
       </div>
     </aside>
   </div>
 
   <div class="relative border-y border-line bg-surface-muted/40">
-    <dl
-      class="mx-auto grid max-w-5xl grid-cols-3 divide-x divide-line px-6"
-    >
+    <dl class="mx-auto grid max-w-5xl grid-cols-3 divide-x divide-line px-6">
       {
         cv.stats.map((stat) => (
           <div class="px-4 py-7 text-center first:pl-0 last:pr-0 sm:px-8">
